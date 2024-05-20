@@ -4,19 +4,19 @@ use Dotenv\Dotenv;
 use GuzzleHttp\Client as Guzzle;
 use Mabasic\WakaTime\WakaTime;
 
-class WakaTimeTest extends PHPUnit_Framework_TestCase
+class WakaTimeTest extends \PHPUnit\Framework\TestCase
 {
     protected $wakatime;
 
     protected $project;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $dotenv = new Dotenv(__DIR__ . '/../');
+        $dotenv = Dotenv::createImmutable(__DIR__."/../");
         $dotenv->load();
 
-        $api_key       = getenv('WAKATIME_API_KEY');
-        $this->project = getenv('WAKATIME_PROJECT');
+        $api_key       = $_ENV['WAKATIME_API_KEY'];
+        $this->project = $_ENV['WAKATIME_PROJECT'];
 
         // Arrange
         $this->wakatime = new WakaTime(new Guzzle, $api_key);
@@ -29,7 +29,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForToday();
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt($hours);
     }
 
     /** @test */
@@ -39,7 +39,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForToday($this->project);
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /** @test */
@@ -49,7 +49,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForYesterday();
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /** @test */
@@ -59,7 +59,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForYesterday($this->project);
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /** @test */
@@ -69,7 +69,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForLast7Days();
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /** @test */
@@ -79,7 +79,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForLast7Days($this->project);
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt($hours);
     }
 
     /** @test */
@@ -89,7 +89,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForLast30Days();
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /** @test */
@@ -99,7 +99,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForLast30Days($this->project);
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /** @test */
@@ -109,7 +109,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForThisMonth();
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /** @test */
@@ -119,7 +119,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForThisMonth($this->project);
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /** @test */
@@ -129,7 +129,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForLastMonth();
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /** @test */
@@ -139,7 +139,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $hours = $this->wakatime->getHoursLoggedForLastMonth($this->project);
 
         // Assert
-        $this->assertInternalType('int', $hours);
+        $this->assertIsInt( $hours);
     }
 
     /**
@@ -151,7 +151,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
     {
         $response = $this->wakatime->currentUser();
 
-        $this->assertInternalType('array', $response);
+        $this->assertIsArray( $response);
     }
 
     /** @test */
@@ -159,7 +159,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
     {
         $response = $this->wakatime->users('mabasic');
 
-        $this->assertInternalType('array', $response);
+        $this->assertIsArray( $response);
     }
 
     /**
@@ -174,7 +174,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $response = $this->wakatime->stats($range, $this->project);
 
         // Assert
-        $this->assertInternalType('array', $response);
+        $this->assertIsArray( $response);
     }
 
     /** @test */
@@ -185,7 +185,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
         $response = $this->wakatime->stats($range, $this->project);
 
         // Assert
-        $this->assertInternalType('array', $response);
+        $this->assertIsArray( $response);
     }
 
     /**
@@ -200,7 +200,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
 
         $response = $this->wakatime->summaries($startDate, $endDate);
 
-        $this->assertInternalType('array', $response);
+        $this->assertIsArray( $response);
     }
 
     /** @test */
@@ -212,7 +212,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
 
         $response = $this->wakatime->summaries($startDate, $endDate, $project);
 
-        $this->assertInternalType('array', $response);
+        $this->assertIsArray( $response);
     }
 
     /**
@@ -227,7 +227,7 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
 
         $response = $this->wakatime->heartbeats($date, $show);
 
-        $this->assertInternalType('array', $response);
+        $this->assertIsArray( $response);
     }
 
     /**
@@ -243,6 +243,6 @@ class WakaTimeTest extends PHPUnit_Framework_TestCase
 
         $response = $this->wakatime->durations($date, $project, $branches);
 
-        $this->assertInternalType('array', $response);
+        $this->assertIsArray( $response);
     }
 }

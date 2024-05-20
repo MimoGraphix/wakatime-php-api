@@ -1,6 +1,8 @@
 <?php namespace Mabasic\WakaTime;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use Mabasic\WakaTime\Exceptions\PremiumSubscriptionMissingException;
 use Mabasic\WakaTime\Traits\Reports;
 
 class WakaTime
@@ -22,7 +24,6 @@ class WakaTime
     protected function getHeaders()
     {
         return [
-            'verify'  => __DIR__ . '/ca-bundle.crt',
             'headers' => [
                 'Authorization' => 'Basic ' . base64_encode($this->api_key),
             ],
@@ -39,7 +40,15 @@ class WakaTime
     {
         $url = "{$this->api_url}/{$resource}";
 
-        $response = $this->guzzle->get($url, $this->getHeaders())->getBody();
+        try {
+            $response = $this->guzzle->get($url, $this->getHeaders())->getBody();
+        }catch (ClientException $exception){
+            if($exception->getCode() == "402"){
+                throw new PremiumSubscriptionMissingException($exception->getResponse()->getBody());
+            }
+
+            throw $exception;
+        }
 
         return json_decode($response, true);
     }
